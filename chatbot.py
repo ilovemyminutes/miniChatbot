@@ -43,9 +43,3 @@ if __name__ == '__main__':
         if text == EXIT:
             break
         bot.query(text)
-
-    
-
-
-
-
