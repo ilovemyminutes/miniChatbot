@@ -2,7 +2,7 @@ import os
 from dataclasses import dataclass
 
 
-QUESTIONS_PATH = './data/questions_pooler_outputs.npy'
+QUESTIONS_PATH = './data/questions_embeddings.npy'
 DATA_PATH = './data/chatbot_data.txt'
 DOT = '.'
 

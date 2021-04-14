@@ -1,9 +1,11 @@
 import pandas as pd
 import numpy as np
 import torch
+from torch import nn
 from transformers import AutoModel, AutoTokenizer
 from config import Config
 
+EXIT = '대화종료'
 
 class VanillaChatbot:
     def __init__(self):
@@ -32,6 +34,16 @@ class VanillaChatbot:
     def load_questions(root: str=Config.Questions):
         questions = torch.tensor(np.load(root))
         return questions
+
+
+if __name__ == '__main__':
+    bot = VanillaChatbot()
+    while True:
+        text = input("할 말을 입력해주세요(종료시 '대화종료' 입력): ")
+        if text == EXIT:
+            break
+        bot.query(text)
+
     
 
 
