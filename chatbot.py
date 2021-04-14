@@ -25,10 +25,13 @@ class VanillaChatbot:
         if return_answer:
             return answer
 
-    def get_similar_question_id(self, q_emb):
-        cos = nn.CosineSimilarity(dim=1, eps=1e-6)
-        similarities = cos(self.questions, q_emb)
-        return torch.argmax(similarities).item()
+    def get_similar_question_id(self, q_emb, type: str='cos'):
+        if type == 'cos':
+            cos = nn.CosineSimilarity(dim=1, eps=1e-6)
+            similarities = cos(self.questions, q_emb)
+            return torch.argmax(similarities).item()
+        else:
+            raise NotImplementedError
 
     @staticmethod
     def load_questions(root: str = Config.Questions):
@@ -37,9 +40,15 @@ class VanillaChatbot:
 
 
 if __name__ == "__main__":
+    print('*'*150)
+    print('환영합니다! 간단한 챗봇을 사용해보세요')
+    print('*'*150)
     bot = VanillaChatbot()
     while True:
         text = input("할 말을 입력해주세요(종료시 '대화종료' 입력): ")
         if text == EXIT:
             break
         bot.query(text)
+    print('*'*150)
+    print('챗봇을 종료합니다. 다음에 또 만나요!')
+    print('*'*150)
