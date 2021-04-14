@@ -4,15 +4,16 @@ import torch
 from torch import nn
 from transformers import AutoModel, AutoTokenizer
 from config import Config
+from similarity import get_cosine_similarity, get_l1_distance, get_l2_distance
 
 EXIT = "대화종료"
 
 
 class VanillaChatbot:
-    def __init__(self):
+    def __init__(self, sim_type: str='cos'):
         self.model = AutoModel.from_pretrained(Config.BERTMultiLingual)
         self.tokenizer = AutoTokenizer.from_pretrained(Config.BERTMultiLingual)
-
+        self.sim_type = sim_type
         self.questions = self.load_questions(Config.Questions)
         self.answers = pd.read_csv(Config.Data)["A"].tolist()
 
@@ -25,13 +26,17 @@ class VanillaChatbot:
         if return_answer:
             return answer
 
-    def get_similar_question_id(self, q_emb, type: str='cos'):
-        if type == 'cos':
-            cos = nn.CosineSimilarity(dim=1, eps=1e-6)
-            similarities = cos(self.questions, q_emb)
-            return torch.argmax(similarities).item()
-        else:
-            raise NotImplementedError
+    def get_similar_question_id(self, q_emb):
+        if self.sim_type == 'cos':
+            # cos = nn.CosineSimilarity(dim=1, eps=1e-6)
+            # similarities = cos(self.questions, q_emb)
+            similarities = get_cosine_similarity(self.questions, q_emb)
+        elif self.sim_type == 'l1':
+            similarities = get_l1_distance(self.questions, q_emb)
+        elif self.sim_type == 'l2':
+            similarities = get_l2_distance(self.questions, q_emb)
+
+        return torch.argmax(similarities).item()
 
     @staticmethod
     def load_questions(root: str = Config.Questions):

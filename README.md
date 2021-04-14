@@ -9,7 +9,7 @@ simple chat bot using pretrained BERT from huggingface
 
 ## Run
 ```python
->>> python chatbot.py
+>>> python chatbot.py --sim-type cos
 *********************************
 환영합니다! 간단한 챗봇을 사용해보세요
 *********************************
@@ -20,6 +20,7 @@ simple chat bot using pretrained BERT from huggingface
 챗봇을 종료합니다. 다음에 또 만나요!
 *********************************
 ```
+- `sim_type`: 문장 간 유사도 판별에 활용할 측정 방법을 설정합니다. Cosine Similarity(`'cos'`), L1-Norm(`'l1'`), L2-Norm(`'l2'`)의 3가지 측정 방법을 지원합니다.(default. `'cos'`)
 
 ## Dataset
 - [Chatbot_data](https://github.com/songys/Chatbot_data), songys
