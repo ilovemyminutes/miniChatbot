@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import torch
-from torch import nn
 from transformers import AutoModel, AutoTokenizer
 from config import Config
 from similarity import get_cosine_similarity, get_l1_distance, get_l2_distance
