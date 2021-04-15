@@ -13,9 +13,10 @@ class VanillaChatbot:
     def __init__(self, sim_type: str='cos'):
         self.model = AutoModel.from_pretrained(Config.BERTMultiLingual)
         self.tokenizer = AutoTokenizer.from_pretrained(Config.BERTMultiLingual)
-        self.sim_type = sim_type
         self.questions = self.load_questions(Config.Questions)
         self.answers = pd.read_csv(Config.Data)["A"].tolist()
+        self.measure = self.get_similarity_measure(sim_type=sim_type) # 유사도 측정 객체
+        return
 
     def query(self, question: str, return_answer=False):
         question_tokenized = self.tokenizer(question, return_tensors="pt")
@@ -27,8 +28,7 @@ class VanillaChatbot:
             return answer
 
     def get_similar_question_id(self, q_emb):
-        measure = self.get_similarity_measure(sim_type=self.sim_type)
-        similarities = measure(self.questions, q_emb)
+        similarities = self.measure(self.questions, q_emb)
         similar_question_id = torch.argmax(similarities).item()
         return similar_question_id
 
