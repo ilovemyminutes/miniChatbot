@@ -23,4 +23,4 @@ simple chat bot using pretrained BERT from huggingface
 - `sim_type`: 문장 간 유사도 판별에 활용할 측정 방법을 설정합니다. Cosine Similarity(`'cos'`), L1-Norm(`'l1'`), L2-Norm(`'l2'`)의 3가지 측정 방법을 지원합니다.(default. `'cos'`)
 
 ## Dataset
-- [Chatbot_data](https://github.com/songys/Chatbot_data), songys
+- [Chatbot_data](https://github.com/songys/Chatbot_data), [songys](https://github.com/songys)
