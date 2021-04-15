@@ -18,30 +18,35 @@ class VanillaChatbot:
         self.answers = pd.read_csv(Config.Data)["A"].tolist()
 
     def query(self, question: str, return_answer=False):
-        q_tok = self.tokenizer(question, return_tensors="pt")
-        q_emb = self.model(**q_tok).pooler_output
-        similar_q_id = self.get_similar_question_id(q_emb)
-        answer = self.answers[similar_q_id]
-        print(answer)
+        question_tokenized = self.tokenizer(question, return_tensors="pt")
+        question_embedded = self.model(**question_tokenized).pooler_output
+        similar_question_id = self.get_similar_question_id(question_embedded)
+        answer = self.answers[similar_question_id]
+        print('챗봇:', answer)
         if return_answer:
             return answer
 
     def get_similar_question_id(self, q_emb):
-        if self.sim_type == 'cos':
-            # cos = nn.CosineSimilarity(dim=1, eps=1e-6)
-            # similarities = cos(self.questions, q_emb)
-            similarities = get_cosine_similarity(self.questions, q_emb)
-        elif self.sim_type == 'l1':
-            similarities = get_l1_distance(self.questions, q_emb)
-        elif self.sim_type == 'l2':
-            similarities = get_l2_distance(self.questions, q_emb)
-
-        return torch.argmax(similarities).item()
+        measure = self.get_similarity_measure(sim_type=self.sim_type)
+        similarities = measure(self.questions, q_emb)
+        similar_question_id = torch.argmax(similarities).item()
+        return similar_question_id
 
     @staticmethod
     def load_questions(root: str = Config.Questions):
         questions = torch.tensor(np.load(root))
         return questions
+    
+    @staticmethod
+    def get_similarity_measure(sim_type: str):
+        if sim_type == 'cos':
+            measure = get_cosine_similarity
+        elif sim_type == 'l1':
+            measure = get_l1_distance
+        elif sim_type == 'l2':
+            measure = get_l2_distance
+        return measure
+
 
 
 if __name__ == "__main__":
