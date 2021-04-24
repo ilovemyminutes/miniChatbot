@@ -1,16 +1,13 @@
 import os
 from dataclasses import dataclass
+import torch
 
-
-QUESTIONS_PATH = "./data/questions_embeddings.npy"
-DATA_PATH = "./data/chatbot_data.txt"
-DOT = "."
 
 
 @dataclass
 class Config:
-    Data: str = DATA_PATH if os.path.isfile(DATA_PATH) else DOT + DATA_PATH
-    Questions: str = (
-        QUESTIONS_PATH if os.path.isfile(QUESTIONS_PATH) else DOT + QUESTIONS_PATH
-    )
+    ChatbotData: str = "./data/chatbot_data.txt"
+    ParaKQCData: str = "./paraKQC/data/paraKQC_v1.txt"
+    Questions: str = "./data/questions_embeddings.npy"
     BERTMultiLingual: str = "bert-base-multilingual-cased"
+    Device: str = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
